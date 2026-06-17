@@ -41,8 +41,8 @@ This repository is the **Pinokio launcher** for [Higgs Audio Studio](https://git
 - Isolated Python **3.12** `venv` via uv — no system-wide installs
 - PyTorch auto-selected by GPU/OS — CUDA 12.8 (NVIDIA x64), **CUDA 13.0 (NVIDIA aarch64)**, DirectML (AMD Win), ROCm 6.3 (AMD Linux), MPS/CPU (macOS), CPU fallback
 - **Triton** for `torch.compile` (~2× on NVIDIA bf16). Higgs uses PyTorch SDPA flash kernels — external Flash-Attention 2 is not required
-- **llama-cpp-python** for the GGUF AI text-director on GPU (cu124) or CPU
-- CUDA runtime DLLs copied next to `llama.dll` on Windows NVIDIA (`copy_cuda_dlls.py`)
+- **llama-cpp-python** for the GGUF AI text-director — JamePeng cu128 build on NVIDIA (Win/Linux x64), abetlen CPU build otherwise. The JamePeng build uses runtime CPU-microarchitecture dispatch (no forced AVX-512, so it runs on Intel 12th/13th/14th-gen consumer CPUs) and a recent llama.cpp (hybrid attention+SSM models), with bundled CUDA 12.8 matching PyTorch
+- `KMP_DUPLICATE_LIB_OK=TRUE` at start so PyTorch's Intel OpenMP and llama.cpp's LLVM OpenMP can coexist in one process
 - Starter voice pack (~51 RU/EN presets) downloaded automatically; 743 extra Russian voices on-demand in-app
 - Bundled Node.js + CUDA from Pinokio's `ai` bundle — no separate downloads
 - Gradio auto-picks a free port via `kernel.port()`; `NO_AUTO_BROWSER=true` prevents a duplicate browser tab

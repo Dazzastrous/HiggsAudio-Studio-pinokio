@@ -16,7 +16,10 @@ module.exports = async (kernel) => {
             HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}",
             TRANSFORMERS_CACHE: "{{path.resolve(cwd,'app/models')}}",
             PYTHONIOENCODING: "utf-8",
-            PYTHONUNBUFFERED: "1"
+            PYTHONUNBUFFERED: "1",
+            // torch грузит Intel OpenMP (libiomp5), llama.cpp — LLVM OpenMP (libomp140);
+            // в одном процессе это даёт OMP Error #15 → abort при инференсе режиссёра. Разрешаем сосуществование.
+            KMP_DUPLICATE_LIB_OK: "TRUE"
           },
           message: ["python app.py"],
           on: [{
