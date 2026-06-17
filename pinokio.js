@@ -55,6 +55,11 @@ module.exports = {
           text: "Start",
           href: "start.js",
         }, {
+          icon: "fa-solid fa-wifi",
+          text: "<div><strong>Start (Offline)</strong><div>100% local — no internet, uses pre-downloaded models</div></div>",
+          href: "start.js",
+          params: { offline: true }
+        }, {
           icon: "fa-solid fa-plug",
           text: "Update",
           href: "update.js",

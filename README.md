@@ -43,7 +43,8 @@ This repository is the **Pinokio launcher** for [Higgs Audio Studio](https://git
 - **Triton** for `torch.compile` (~2× on NVIDIA bf16). Higgs uses PyTorch SDPA flash kernels — external Flash-Attention 2 is not required
 - **llama-cpp-python** for the GGUF AI text-director — JamePeng cu128 build on NVIDIA (Win/Linux x64), abetlen CPU build otherwise. The JamePeng build uses runtime CPU-microarchitecture dispatch (no forced AVX-512, so it runs on Intel 12th/13th/14th-gen consumer CPUs) and a recent llama.cpp (hybrid attention+SSM models), with bundled CUDA 12.8 matching PyTorch
 - `KMP_DUPLICATE_LIB_OK=TRUE` at start so PyTorch's Intel OpenMP and llama.cpp's LLVM OpenMP can coexist in one process
-- Starter voice pack (~51 RU/EN presets) downloaded automatically; 743 extra Russian voices on-demand in-app
+- **Runs 100% local/offline.** Install pre-downloads every model needed for generation (Higgs v3 TTS, the `bosonai` audio codec, both Qwen3.5 GGUF directors, and the Moonshine ASR for reference transcription) into `app/models`. The **Start (Offline)** menu entry sets `HF_HUB_OFFLINE=1` / `TRANSFORMERS_OFFLINE=1` so nothing contacts the internet at runtime
+- Starter voice pack (~51 RU/EN presets) downloaded automatically; 743 extra Russian voices are an optional **online** in-app feature (needs internet — unavailable in Offline mode)
 - Bundled Node.js + CUDA from Pinokio's `ai` bundle — no separate downloads
 - Gradio auto-picks a free port via `kernel.port()`; `NO_AUTO_BROWSER=true` prevents a duplicate browser tab
 - Env isolation: `HF_HOME`, `TRANSFORMERS_CACHE`, `TORCH_HOME` all point inside the launcher folder
@@ -53,6 +54,7 @@ This repository is the **Pinokio launcher** for [Higgs Audio Studio](https://git
 | Menu item | What it runs |
 |-----------|--------------|
 | **Start** | `python app.py` — Gradio on an auto-assigned port, full 6-tab UI (TTS / Expression + Director / Cloning / Podcast / Audiobook / Batch) |
+| **Start (Offline)** | Same as Start, but with `HF_HUB_OFFLINE=1` / `TRANSFORMERS_OFFLINE=1` — 100% local, no internet (uses the models pre-downloaded during install) |
 | **Update** | `git pull` the app, then re-run install (picks up new dependencies) |
 | **Save Disk Space** | Dedup venv libraries via `fs.link` |
 | **Reset** | Wipe `app/env` to reinstall from scratch |

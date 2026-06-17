@@ -19,7 +19,12 @@ module.exports = async (kernel) => {
             PYTHONUNBUFFERED: "1",
             // torch грузит Intel OpenMP (libiomp5), llama.cpp — LLVM OpenMP (libomp140);
             // в одном процессе это даёт OMP Error #15 → abort при инференсе режиссёра. Разрешаем сосуществование.
-            KMP_DUPLICATE_LIB_OK: "TRUE"
+            KMP_DUPLICATE_LIB_OK: "TRUE",
+            // Offline mode (set by the "Start (Offline)" menu entry): models are pre-cached by install.js,
+            // so HF/Transformers never reach the network. Default Start leaves these off so the optional
+            // cloud-voice browser still works online.
+            HF_HUB_OFFLINE: "{{args.offline ? '1' : '0'}}",
+            TRANSFORMERS_OFFLINE: "{{args.offline ? '1' : '0'}}"
           },
           message: ["python app.py"],
           on: [{

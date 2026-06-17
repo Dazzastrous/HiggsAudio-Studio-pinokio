@@ -60,6 +60,54 @@ module.exports = {
         message: ["uv pip install llama-cpp-python --only-binary=:all: --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu"]
       }
     },
+    // 5. Pre-download all core models into the app/models HF cache (same cache start.js reads via
+    // HUGGINGFACE_HUB_CACHE) so the app runs fully offline afterwards — no first-run downloads.
+    // hf download is idempotent; the exists-guards skip re-validation when already cached.
+    {
+      when: "{{!exists('app/models/models--multimodalart--higgs-audio-v3-tts-4b-transformers')}}",
+      method: "shell.run",
+      params: {
+        venv: "env", venv_python: "3.12", path: "app",
+        env: { HF_HOME: "{{path.resolve(cwd,'app/models')}}", HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}" },
+        message: ["hf download multimodalart/higgs-audio-v3-tts-4b-transformers"]
+      }
+    },
+    {
+      when: "{{!exists('app/models/models--bosonai--higgs-audio-v2-tokenizer')}}",
+      method: "shell.run",
+      params: {
+        venv: "env", venv_python: "3.12", path: "app",
+        env: { HF_HOME: "{{path.resolve(cwd,'app/models')}}", HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}" },
+        message: ["hf download bosonai/higgs-audio-v2-tokenizer"]
+      }
+    },
+    {
+      when: "{{!exists('app/models/models--unsloth--Qwen3.5-9B-GGUF')}}",
+      method: "shell.run",
+      params: {
+        venv: "env", venv_python: "3.12", path: "app",
+        env: { HF_HOME: "{{path.resolve(cwd,'app/models')}}", HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}" },
+        message: ["hf download unsloth/Qwen3.5-9B-GGUF Qwen3.5-9B-Q4_K_M.gguf"]
+      }
+    },
+    {
+      when: "{{!exists('app/models/models--unsloth--Qwen3.5-4B-GGUF')}}",
+      method: "shell.run",
+      params: {
+        venv: "env", venv_python: "3.12", path: "app",
+        env: { HF_HOME: "{{path.resolve(cwd,'app/models')}}", HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}" },
+        message: ["hf download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q4_K_M.gguf"]
+      }
+    },
+    {
+      when: "{{!exists('app/models/models--UsefulSensors--moonshine-base')}}",
+      method: "shell.run",
+      params: {
+        venv: "env", venv_python: "3.12", path: "app",
+        env: { HF_HOME: "{{path.resolve(cwd,'app/models')}}", HUGGINGFACE_HUB_CACHE: "{{path.resolve(cwd,'app/models')}}" },
+        message: ["hf download UsefulSensors/moonshine-base"]
+      }
+    },
     // 6. Стартовый voice-pack (русские/EN пресеты)
     {
       when: "{{!exists('app/voices/RU_Male_Goblin_Puchkov.mp3')}}",
